@@ -1,68 +1,48 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import '../App.css';
 import 'font-awesome/css/font-awesome.min.css';
+import {
+    Link
+} from 'react-router-dom';
+
 
 class SideBar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            menuItems: [
-                {
-                    id: 1,
-                    desc: 'First Menu Item',
-                    icon: 'fa fa-search',
-                    show: true
-                },
-                {
-                    id: 2,
-                    desc: 'Second Menu Item',
-                    icon: 'fa fa-users',
-                    show: true
-                },
-                {
-                    id: 3,
-                    desc: 'Third Menu Item',
-                    icon: 'fa fa-sitemap',
-                    show: true
-                },
-            ],
-            searchTerm: "Hello"
-        }
-    }
-
     searchChanged(event) {
-        console.log("search changed to ", event.target.value);
         this.setState({
-            menuItems: this.state.menuItems.map(item => {
-                let temp=Object.assign({}, item);
-                temp.show=(item.desc.toLocaleLowerCase().indexOf(event.target.value.toLowerCase()) >= 0);
-                console.log("changed ",temp);
+            menuItems: this.props.menuItems.map(item => {
+                let temp = Object.assign({}, item);
+                temp.show = (item.desc.toLocaleLowerCase().indexOf(event.target.value.toLowerCase()) >= 0);
                 return temp;
             })
         });
 
     };
+    componentWillMount(){
+        console.log("Component will mount ",this.props);
+    }
 
     render() {
-        return <div className="sidebar">
-            <input type="text" onChange={this.searchChanged.bind(this)}></input>
+        return <div className={(this.props.sidebarCollapsed ? "sidebar-collapse" : "sidebar")} onMouseEnter={this.props.toggleSidebar} onMouseLeave={this.props.toggleSidebar}>
+            <input type="text" autoFocus="true" onChange={this.searchChanged.bind(this)}></input>
             <span className="fa fa-search searchspan"></span>
-            <Menu menuItems={this.state.menuItems}></Menu>
+            <Menu menuItems={this.props.menuItems}></Menu>
         </div>;
     }
 }
 
 class Menu extends Component {
-
     render() {
         let menuItems = this.props.menuItems
             .filter(item => item.show)
             .map(item => {
-                return <MenuItem desc={item.desc} icon={item.icon} key={item.id}></MenuItem>
+                return <MenuItem desc={item.desc} icon={item.icon} key={item.id} url={item.url}></MenuItem>
             });
-        return <ul className="menu">
-            {menuItems}
-        </ul>
+        return <div>
+            <ul className="menu">
+                {menuItems}
+            </ul>
+        </div>
     }
 }
 
@@ -70,9 +50,26 @@ class MenuItem extends Component {
     render() {
         return <li>
             <span className={this.props.icon}></span>
-            {this.props.desc}
+            <Link to={this.props.url}>{this.props.desc}</Link>
         </li>;
     }
 }
 
-export default SideBar;
+const mapStateToProps = state => {
+    return {
+        menuItems: state.menus.menuItems,
+        sidebarCollapsed: state.menus.sidebarCollapsed
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        toggleSidebar : () => dispatch({
+            type : 'TOGGLE_SIDEBAR'
+        })
+    }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
