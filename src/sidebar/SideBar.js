@@ -7,25 +7,30 @@ import {
 } from 'react-router-dom';
 
 
+class SearchBox extends Component {
+    render() {
+        return (
+            <div>
+                <form>
+                    <input type="search" style={{
+                        width: "100%",
+                    }} onKeyUp={this.props.searchChanged}/>
+                </form>
+            </div>
+        );
+    }
+}
+
+
 class SideBar extends Component {
     searchChanged(event) {
-        this.setState({
-            menuItems: this.props.menuItems.map(item => {
-                let temp = Object.assign({}, item);
-                temp.show = (item.desc.toLocaleLowerCase().indexOf(event.target.value.toLowerCase()) >= 0);
-                return temp;
-            })
-        });
-
+        this.props.searchMenu(event.target.value.toLowerCase());
     };
-    componentWillMount(){
-        console.log("Component will mount ",this.props);
-    }
 
     render() {
-        return <div className={(this.props.sidebarCollapsed ? "sidebar-collapse" : "sidebar")} onMouseEnter={this.props.toggleSidebar} onMouseLeave={this.props.toggleSidebar}>
-            <input type="text" autoFocus="true" onChange={this.searchChanged.bind(this)}></input>
-            <span className="fa fa-search searchspan"></span>
+        return <div className={(this.props.sidebarCollapsed ? "sidebar-collapse" : "sidebar")}
+                    onMouseEnter={this.props.toggleSidebar} onMouseLeave={this.props.toggleSidebar}>
+            <SearchBox searchChanged={this.searchChanged.bind(this)}></SearchBox>
             <Menu menuItems={this.props.menuItems}></Menu>
         </div>;
     }
@@ -64,12 +69,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleSidebar : () => dispatch({
-            type : 'TOGGLE_SIDEBAR'
+        searchMenu: (term) => dispatch({
+            type: 'MENU_SEARCH',
+            payload: term
+        }),
+        toggleSidebar: (item) => dispatch({
+            type: 'TOGGLE_SIDEBAR'
         })
     }
 }
-
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

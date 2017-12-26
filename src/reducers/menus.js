@@ -27,13 +27,20 @@ const defaultState = {
             component: Third
         }]
 }
-const todos = (state = defaultState, action) => {
+const menus = (state = defaultState, action) => {
     switch (action.type) {
         case 'TOGGLE_SIDEBAR':
-            return Object.assign({}, state, {sidebarCollapsed: !state.sidebarCollapsed});
+            return Object.assign({}, state, {
+                sidebarCollapsed: !state.sidebarCollapsed
+            });
+        case 'MENU_SEARCH':
+            var newItems = state.menuItems.map(function (item) {
+                return Object.assign({}, item, {show: item.desc.toLowerCase().indexOf(action.payload) >= 0})
+            });
+            return Object.assign({}, state, {menuItems: newItems});
         default:
-            return state
+            return state;
     }
 }
 
-export default todos
+export default menus

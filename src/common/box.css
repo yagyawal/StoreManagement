@@ -1,0 +1,126 @@
+.box {
+    margin-left: 1px;
+    margin-top: 1px;
+    border: 1px solid #000;
+    border-radius: 3px;
+    box-shadow: inset 0 0 84px rgba(0, 154, 255, 0.43);
+}
+
+.box-title {
+    font-size: 16px;
+    font-weight: bold;
+    font-family: arial;
+    text-shadow: -1px 3px 10px rgba(255, 255, 255, 0.61), 2px 0 8px #FFF;
+    padding: 1px 1px;
+    background-size: 24px;
+}
+
+.box-tools {
+    display: inline-block;
+    float: right;
+    padding-right: 5px;
+    margin-bottom: 3px;
+    color: #a5a2a2;
+    font-weight: lighter;
+    cursor: pointer;
+}
+
+.box-tools > span {
+    padding-right: 2px;
+}
+
+.box-header {
+    background: rgba(89, 178, 255, 0.48);
+}
+
+.box-footer {
+    height: 10px;
+    font-size: 12px;
+    font-weight: bolder;
+    padding-left: 30px;
+    padding-bottom: 10px;
+    padding-right: 6px;
+    text-align: right;
+
+}
+
+.box-body {
+    padding: 10px;
+    min-height: 555px;
+    border: 1px solid #000;
+    background: #FFF;
+    margin: 1px 5px 5px;
+}
+
+.box-body-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(25px, 25px);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
+
+.box-btn-panel {
+    margin-top: 20px;
+    padding: 10px;
+    height: 20px;
+    width: 98%;
+}
+
+.form-field {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(25px, 25px);
+}
+
+.form-field > label {
+    text-align: right;
+    padding-right: 10px;
+    font-weight: bolder;
+}
+
+.form-field > input {
+    padding: 6px 12px;
+    width: 100%;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+input {
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    padding: 1px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: initial;
+    border-image: initial;
+}
+
+.bar-limit {
+    width: 100px; /* width of progress bar */
+    height: 20px; /* height of progress bar */
+    float: right;
+}
+
+.bar-first {
+    background: #0000ff; /* color for progressed portion */
+    display: inline;
+    float: left;
+    text-align: right;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.bar-second {
+    background: #b4b4b4; /*color for progress to be completed portion */
+    display: inline;
+    float: right;
+}
