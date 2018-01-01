@@ -13,7 +13,6 @@ import {
 class App extends Component {
 
     componentWillMount(){
-        console.log("dfadfdafdafas ",this.props);
     }
 
     render() {

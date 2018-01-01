@@ -1,0 +1,17 @@
+[
+  {
+    "inventoryTypeId":1,
+    "inventoryType":"Sim Card",
+    "availableCount":19000.997
+  },
+  {
+    "inventoryTypeId":2,
+    "inventoryType":"Recharge Vouchers 1000",
+    "availableCount":1009.9801
+  },
+  {
+    "inventoryTypeId":3,
+    "inventoryType":"IPHONE 5S",
+    "availableCount":299826534.97867
+  }
+]

@@ -2,8 +2,11 @@ import React, {Component} from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 import './box.css';
 import InputFormField from './InputFormField';
-import { confirmAlert } from 'react-confirm-alert'; // Import
+import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
+import {Table, Column, Cell} from 'fixed-data-table-2';
+import 'fixed-data-table-2/dist/fixed-data-table.css';
+import {DateCell, LinkCell, ColoredTextCell, TextCell, NumberCell} from './dataTable/cells';
 
 
 class BoxTool extends Component {
@@ -14,10 +17,17 @@ class BoxTool extends Component {
     }
 }
 
+// Table data as a list of array.
+const rows = [
+    "first row",
+    "second row",
+    "third row"
+];
+
+
 class Box extends Component {
     constructor(props) {
         super(props);
-        console.log("Inside const ", this.props);
         this.state = {
             boxProp: {
                 title: this.props.boxProp.title || "Title",
@@ -33,33 +43,8 @@ class Box extends Component {
                 completed: 0
             }
         }
-        console.log("State ", this.state);
     }
 
-    componentWillReceiveProps(newProps) {
-        // var tempObj = Object.assign({}, this.state, this.props);
-        // console.log("Temp obj ", tempObj);
-        // this.setState({hello: "hi"});
-        // console.log("State ", this.state);
-        // if (this.state.progress.start) {
-        //     console.log("will mount ?", this.state.progress);
-        //     this.setState({progress: Object.assign({}, this.state.progress, {start: false})});
-        //     this.startProcessing();
-        // } else if (this.state.progress.stop) {
-        //     this.setState({progress: Object.assign({}, this.state.progress, {stop: false})});
-        //     this.endProcessing();
-        // }
-    }
-
-    componentWillMount() {
-        // if (this.state.progress.start) {
-        //     this.setState({progress: Object.assign({}, this.state.progress, {start: false})});
-        //     this.startProcessing();
-        // } else if (this.state.progress.stop) {
-        //     this.setState({progress: Object.assign({}, this.state.progress, {stop: false})});
-        //     this.endProcessing();
-        // }
-    }
 
     startProcessing() {
         this.setState(Object.assign({}, this.state, {submitted: true}));
@@ -68,19 +53,23 @@ class Box extends Component {
             var arrow = ">";
             if (currVal >= 15 && currVal <= 20) {
                 arrow = "=>";
-            } else if (currVal > 20 && currVal<=28) {
+            } else if (currVal > 20 && currVal <= 28) {
                 arrow = "==>";
-            } else if(currVal>28){
-                arrow=">==>";
+            } else if (currVal > 28) {
+                arrow = ">==>";
             }
             this.setState({arrow: arrow, progress: Object.assign({}, this.state.progress, {completed: currVal % 100})});
-        }, 2000);
+        }, 20);
+        console.log("timer ", timer);
         this.setState({timer: timer});
+        console.log("process started");
     }
 
     endProcessing() {
-        if (this.state.progress.timer) {
-            this.state.timer.clearInterval();
+        console.log("ending process")
+        if (this.state.timer) {
+            console.log("DDDDDDDFSAD", this.state.timer);
+            clearInterval(this.state.timer);
             this.setState({timer: null});
         }
     }
@@ -114,6 +103,63 @@ class Box extends Component {
         });
     }
 
+    getColumns() {
+        const {columns} = this.props.tableDetail;
+        return columns.map(column => {
+            var cell = null;
+            let align = 'center';
+            switch (column.type) {
+                case "text":
+                    cell = <TextCell data={{getObjectAt: this.props.rowGetter}}/>;
+                    break;
+                case "number":
+                    cell = <NumberCell data={{getObjectAt: this.props.rowGetter}}/>;
+                    align = 'right';
+                    break;
+                case "link":
+                    cell = <LinkCell data={{getObjectAt: this.props.rowGetter}}/>;
+                    break;
+                case "date":
+                    cell = <DateCell data={{getObjectAt: this.props.rowGetter}}/>;
+                    break;
+                default:
+                    cell = <TextCell data={{getObjectAt: this.props.rowGetter}}/>;
+                    break;
+            }
+            return <Column key={column.key}
+                           columnKey={column.key}
+                           align={align}
+                           header={<Cell>{column.name}</Cell>}
+                           width={column.width || 100}
+                           fixedRight={column.fixedRight}
+                           flexGrow={column.flexGrow || 0}
+                           cell={cell}/>;
+        })
+    }
+
+    createTable() {
+        this.getColumns();
+        const {rowCount, width, height} = this.props.tableDetail;
+        return <Table
+            rowHeight={30}
+            rowsCount={rowCount}
+            width={width}
+            height={height}
+            headerHeight={30}>
+            {this.getColumns()}
+        </Table>;
+    }
+
+    renderContent() {
+        if (this.props.tableDetail) {
+            return this.createTable();
+        } else if (this.props.formFields) {
+            return this.createForm();
+        } else {
+            return <div></div>
+        }
+    }
+
     formSubmitted() {
         confirmAlert({
             title: '',                        // Title dialog
@@ -135,7 +181,7 @@ class Box extends Component {
                      hidden={!this.state.boxProp.minimized}></BoxTool> : "";
         let closeTool = (this.state.boxProp.closeTool) ?
             <BoxTool clickHandler={this.closeIconClickHandler.bind(this)} icon="fa-window-close-o"></BoxTool> : "";
-        return <div className="box" style={{width: this.state.boxProp.minimized ? "20%" : "100%"}}>
+        return <div className="box" style={{width: this.state.boxProp.minimized ? "20%" : "50%"}}>
             <div className="box-header">
                 <span className="box-title">{this.props.boxProp.title}</span>
                 <div className="box-tools">
@@ -143,7 +189,7 @@ class Box extends Component {
                 </div>
             </div>
             <div className="box-body" style={{display: (this.state.boxProp.minimized ? 'none' : 'grid')}}>
-                <div className="box-body-content">{this.createForm()}</div>
+                <div className="box-body-content">{this.renderContent()}</div>
                 <div className="box-btn-panel">
                     <button className="submit-btn"
                             onClick={this.formSubmitted.bind(this)}
@@ -164,6 +210,16 @@ class Box extends Component {
             </div>
         </div>
     }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.fetching) {
+            this.startProcessing();
+        } else {
+            this.endProcessing();
+        }
+    }
+
+
 }
 
 export default Box;
